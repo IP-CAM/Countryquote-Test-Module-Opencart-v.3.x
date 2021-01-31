@@ -1,0 +1,82 @@
+{{ header }}
+<style>
+.orange-table thead {
+   font-weight: bold;
+   color: white;
+   background-color: #ff8000;
+}
+.orange-table td {
+  padding: 20px !important;
+}
+</style>
+<div id="information-contact" class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}">{{ content_top }}
+    
+      <div class="row panel-heading">
+        <div class="form-group">
+          <div class="col-sm-3">
+			<div class="input-group">
+				<input type="text" name="country" value="" id="input-country" class="form-control" autocomplete="off" style="padding-left: 30px">
+				<span class="input-group-btn" style="position: absolute; left: 10px; top: 10px; z-index: 10;">
+					<div class="input-group-text bg-transparent"><i class="fa fa-search"></i></div>
+				</span>
+			</div>          
+          </div>
+          <label class="col-sm-3 control-label" for="input-country"><b>{{ text_type }}</b></label>          
+        </div>
+      </div>
+      <div class="row panel-body">
+        <table class="table orange-table">
+          <thead>
+            <tr>
+              <td width="66%">{{ text_countries }}</td>
+              <td width="34%">{{ text_fee }}</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="country-name"></td>
+              <td id="country-fee"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    
+      {{ content_bottom }}</div>
+    {{ column_right }}</div>
+</div>
+
+<script type="text/javascript"><!--
+$('input[name=\'country\']').autocomplete({
+	'source': function(request, response) {
+		$.ajax({
+			url: 'index.php?route=information/countryquote/autocomplete&filter_name=' +  encodeURIComponent(request),
+			dataType: 'json',
+			success: function(json) {
+				response($.map(json, function(item) {
+					return {
+						label: item['name'],
+						value: item['country_id']
+					}
+				}));
+			}
+		});
+	},
+	'select': function(item) {
+		$('input[name=\'country\']').val('');
+console.log(item);
+		$('#country-name').text(item.label);
+	}
+});
+//--></script>
+
+{{ footer }}
